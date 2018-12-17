@@ -71,7 +71,7 @@ export class AppComponent {
         d.fy = d3.event.y;
       })
       .on('end', (d: any) => {
-        if (!d3.event.active) this.force.alphaTarget(0);
+        if (!d3.event.active) this.force.alphaTarget(0.3);
 
         d.fx = null;
         d.fy = null;
@@ -112,9 +112,9 @@ export class AppComponent {
     this.circle = this.svg.append('svg:g').selectAll('g');
 
     // app starts here
-    this.svg.on('mousedown', this.mousedown)
-      .on('mousemove', this.mousemove)
-      .on('mouseup', this.mouseup);
+    this.svg.on('mousedown', (dataItem, value, source) => this.mousedown(dataItem, value, source))
+      .on('mousemove', (dataItem) => this.mousemove(dataItem))
+      .on('mouseup', (dataItem) => this.mouseup(dataItem));
     d3.select(window)
       .on('keydown', this.keydown)
       .on('keyup', this.keyup);
@@ -227,7 +227,8 @@ export class AppComponent {
 
         this.restart();
       })
-      .on('mouseup', function (d) {
+      .on('mouseup', (dataItem: any) => {
+        debugger;
         if (!this.mousedownNode) return;
 
         // needed by FF
@@ -236,14 +237,14 @@ export class AppComponent {
           .style('marker-end', '');
 
         // check for drag-to-self
-        this.mouseupNode = d;
+        this.mouseupNode = dataItem;
         if (this.mouseupNode === this.mousedownNode) {
           this.resetMouseVars();
           return;
         }
 
         // unenlarge target node
-        d3.select(this).attr('transform', '');
+        d3.select(d3.event.currentTarget).attr('transform', '');
 
         // add link to graph (update if exists)
         // NB: links are strictly source < target; arrows separately specified by booleans
@@ -281,15 +282,14 @@ export class AppComponent {
     this.force.alphaTarget(0.3).restart();
   }
 
-  mousedown(source: any) {
+  mousedown(dataItem: any, value: any, source: any) {
     // because :active only works in WebKit?
     this.svg.classed('active', true);
 
     if (d3.event.ctrlKey || this.mousedownNode || this.mousedownLink) return;
 
-    //TODO: Resolve this to svg item
     // insert new node at point
-    const point = d3.mouse(source);
+    const point = d3.mouse(d3.event.currentTarget);
     // const point = d3.mouse(this);
     const node = { id: ++this.lastNodeId, reflexive: false, x: point[0], y: point[1] };
     this.nodes.push(node);
@@ -301,12 +301,12 @@ export class AppComponent {
     if (!this.mousedownNode) return;
 
     // update drag line
-    this.dragLine.attr('d', `M${this.mousedownNode.x},${this.mousedownNode.y}L${d3.mouse(source)[0]},${d3.mouse(source)[1]}`);
+    this.dragLine.attr('d', `M${this.mousedownNode.x},${this.mousedownNode.y}L${d3.mouse(d3.event.currentTarget)[0]},${d3.mouse(d3.event.currentTarget)[1]}`);
 
     this.restart();
   }
 
-  mouseup() {
+  mouseup(source: any) {
     if (this.mousedownNode) {
       // hide drag line
       this.dragLine
