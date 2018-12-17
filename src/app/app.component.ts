@@ -10,9 +10,8 @@ export class AppComponent {
   title = 'ng-d3-graph-editor';
   @ViewChild('graphContainer') graphContainer: ElementRef;
 
-
   width = 960;
-  height = 500;
+  height = 600;
   colors = d3.scaleOrdinal(d3.schemeCategory10);
 
   svg: any;
@@ -45,6 +44,10 @@ export class AppComponent {
   ];
 
   ngAfterContentInit() {
+    const rect = this.graphContainer.nativeElement.getBoundingClientRect();
+    console.log(rect.width, rect.height);
+
+    this.width = rect.width;
 
     this.svg = d3.select('#graphContainer')
       .attr('oncontextmenu', 'return false;')
