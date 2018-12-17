@@ -1,0 +1,56 @@
+::ng-deep svg {
+    background-color: #FFF;
+    cursor: default;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+  }
+  
+  ::ng-deep svg:not(.active):not(.ctrl) {
+    cursor: crosshair;
+  }
+  
+  ::ng-deep path.link {
+    fill: none;
+    stroke: #000;
+    stroke-width: 4px;
+    cursor: default;
+  }
+  
+  ::ng-deep svg:not(.active):not(.ctrl) path.link {
+    cursor: pointer;
+  }
+  
+  ::ng-deep path.link.selected {
+    stroke-dasharray: 10,2;
+  }
+  
+  ::ng-deep path.link.dragline {
+    pointer-events: none;
+  }
+  
+  ::ng-deep path.link.hidden {
+    stroke-width: 0;
+  }
+  
+  ::ng-deep circle.node {
+    stroke-width: 1.5px;
+    cursor: pointer;
+  }
+  
+  ::ng-deep circle.node.reflexive {
+    stroke: #000 !important;
+    stroke-width: 2.5px;
+  }
+  
+  ::ng-deep text {
+    font: 12px sans-serif;
+    pointer-events: none;
+  }
+  
+  ::ng-deep text.id {
+    text-anchor: middle;
+    font-weight: bold;
+  }
